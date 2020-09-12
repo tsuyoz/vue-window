@@ -1,31 +1,45 @@
 {
-  "name": "vue-window",
+  "name": "@tsuyoz/vue-window",
   "version": "0.1.0",
-  "private": true,
+  "private": false,
+  "main": "dist/vue-window.common.js",
+  "unpkg": "./dist/vue-window.umd.min.js",
+  "jsdelivr": "./dist/vue-window.umd.min.js",
+  "typings": "dist/types/index.d.ts",
+  "license": "MIT",
+  "author": "tsuyoz",
+  "files": [ "dist" ],
+  "keywords": ["Vue", "Vue.js", "window"],
+  "repository": {
+    "type": "git",
+    "url": "[GitHubのURLあれば]"
+  },
   "scripts": {
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
-    "lint": "vue-cli-service lint"
+    "lint": "vue-cli-service lint",
+    "build-bundle": "vue-cli-service build --target lib --name vue-window ./src/library-main.ts"
   },
   "dependencies": {
-    "core-js": "^3.6.5",
-    "vue": "^2.6.11"
+    "@vue/composition-api": "^1.0.0-beta.11"
   },
   "devDependencies": {
-    "@typescript-eslint/eslint-plugin": "^2.33.0",
-    "@typescript-eslint/parser": "^2.33.0",
-    "@vue/cli-plugin-babel": "~4.5.0",
-    "@vue/cli-plugin-eslint": "~4.5.0",
-    "@vue/cli-plugin-typescript": "~4.5.0",
-    "@vue/cli-service": "~4.5.0",
+    "core-js": "^3.6.5",
+    "vue": "^2.6.12",
+    "@typescript-eslint/eslint-plugin": "^2.34.0",
+    "@typescript-eslint/parser": "^2.34.0",
+    "@vue/cli-plugin-babel": "~4.5.6",
+    "@vue/cli-plugin-eslint": "~4.5.6",
+    "@vue/cli-plugin-typescript": "~4.5.6",
+    "@vue/cli-service": "~4.5.6",
     "@vue/eslint-config-airbnb": "^5.0.2",
     "@vue/eslint-config-typescript": "^5.0.2",
-    "eslint": "^6.7.2",
+    "eslint": "^6.8.0",
     "eslint-plugin-import": "^2.20.2",
     "eslint-plugin-vue": "^6.2.2",
     "node-sass": "^4.12.0",
     "sass-loader": "^8.0.2",
-    "typescript": "~3.9.3",
-    "vue-template-compiler": "^2.6.11"
+    "typescript": "~3.9.7",
+    "vue-template-compiler": "^2.6.12"
   }
 }

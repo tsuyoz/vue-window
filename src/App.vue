@@ -1,29 +1,31 @@
 <template>
-  <div id="app">
-    <img alt="Vue logo" src="./assets/logo.png">
-    <HelloWorld msg="Welcome to Your Vue.js + TypeScript App"/>
-  </div>
+    <div id="app">
+        <window window-title="TESTAAAAAA" boundary-selector="#app"
+                init-width="80%" init-height="80%">
+            HELLO!
+        </window>
+    </div>
 </template>
 
 <script lang="ts">
-import Vue from 'vue';
-import HelloWorld from './components/HelloWorld.vue';
+import { defineComponent } from "@vue/composition-api"
+import Window from "@/components/window/window.vue"
+import { createWindowManager } from "@/components/window/window-manager-hook"
 
-export default Vue.extend({
-  name: 'App',
-  components: {
-    HelloWorld,
-  },
-});
+export default defineComponent({
+    components: {
+        Window,
+    },
+    setup() {
+        createWindowManager()
+        return {}
+    },
+})
 </script>
 
 <style lang="scss">
 #app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-  margin-top: 60px;
+    width: 100%;
+    height: 100%;
 }
 </style>
