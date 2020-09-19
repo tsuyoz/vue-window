@@ -1,24 +1,11 @@
 # vue-window
 
-## Project setup
+## Install
 ```
-npm install
+npm install @tsuyoz/vue-window
 ```
-
-### Compiles and hot-reloads for development
-```
-npm run serve
+## Quick Start
 ```
 
-### Compiles and minifies for production
 ```
-npm run build
-```
-
-### Lints and fixes files
-```
-npm run lint
-```
-
-### Customize configuration
-See [Configuration Reference](https://cli.vuejs.org/config/).
+This document is currently being prepared! 

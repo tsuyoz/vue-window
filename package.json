@@ -1,27 +1,39 @@
 {
   "name": "@tsuyoz/vue-window",
-  "version": "0.1.0",
+  "version": "0.1.16",
   "private": false,
   "main": "dist/vue-window.common.js",
-  "unpkg": "./dist/vue-window.umd.min.js",
-  "jsdelivr": "./dist/vue-window.umd.min.js",
+  "unpkg": "dist/vue-window.umd.min.js",
+  "jsdelivr": "dist/vue-window.umd.min.js",
   "typings": "dist/types/index.d.ts",
-  "license": "MIT",
   "author": "tsuyoz",
-  "files": [ "dist" ],
-  "keywords": ["Vue", "Vue.js", "window"],
+  "license": "MIT",
+  "files": [
+    "dist/*.js",
+    "dist/types/*"
+  ],
+  "keywords": [
+    "Vue",
+    "Vue.js",
+    "window",
+    "TypeScript"
+  ],
   "repository": {
     "type": "git",
-    "url": "[GitHubのURLあれば]"
+    "url": "git+https://github.com/tsuyoz/vue-window.git"
   },
   "scripts": {
-    "serve": "vue-cli-service serve",
-    "build": "vue-cli-service build",
+    "serve-test": "VUE_CLI_SERVICE_CONFIG_PATH=$PWD/src/_test_/vue.config.test.js vue-cli-service serve",
     "lint": "vue-cli-service lint",
-    "build-bundle": "vue-cli-service build --target lib --name vue-window ./src/library-main.ts"
+    "build-lib": "VUE_CLI_SERVICE_CONFIG_PATH=$PWD/vue.config.lib.js vue-cli-service build --target lib --name vue-window src/index.ts",
+    "build-type": "tsc --emitDeclarationOnly --declaration -P tsconfig.types.json",
+    "build-release": "npm run build-lib && npm run build-type"
   },
   "dependencies": {
-    "@vue/composition-api": "^1.0.0-beta.11"
+    "rxjs": "^6.6.3",
+    "@vue/composition-api": "^1.0.0-beta.14"
+  },
+  "peerDependencies": {
   },
   "devDependencies": {
     "core-js": "^3.6.5",

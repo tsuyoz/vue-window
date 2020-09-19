@@ -66,5 +66,9 @@ export const createWindowManager = (startZIndex?: number): WindowManagerStore =>
 }
 
 export const useWindowManger = (): WindowManagerStore | undefined => {
-    return inject(windowManagerStoreKey)
+    try {
+        return inject(windowManagerStoreKey)
+    } catch {
+        return undefined
+    }
 }

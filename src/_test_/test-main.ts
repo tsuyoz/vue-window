@@ -1,7 +1,6 @@
 import Vue from "vue"
 import VueCompositionApi from "@vue/composition-api"
-import App from "@/App.vue"
-import "@/styles/common.scss"
+import TestApp from "@/_test_/test-app.vue"
 
 Vue.config.productionTip = false
 
@@ -9,5 +8,5 @@ Vue.config.productionTip = false
 Vue.use(VueCompositionApi)
 
 new Vue({
-    render: (h) => h(App),
+    render: (h) => h(TestApp),
 }).$mount("#app")

@@ -109,6 +109,7 @@ $window-title-bar-color: #f6f6f6;
     height: calc(100% - 46px);
     padding: 10px;
     overflow: scroll;
+    box-sizing: border-box;
 }
 
 .drag-handle {

@@ -119,6 +119,31 @@ interface Rect {
      * 下位置(px)
      */
     bottom: number
+
+    /**
+     * ボーダーを除く幅(px)
+     */
+    clientWidth: number
+    /**
+     * ボーダーを除く高さ(px)
+     */
+    clientHeight: number
+    /**
+     * ボーダーを除く左位置(px)
+     */
+    clientLeft: number
+    /**
+     * ボーダーを除く上位置(px)
+     */
+    clientTop: number
+    /**
+     * ボーダーを除く右位置(px)
+     */
+    clientRight: number
+    /**
+     * ボーダーを除く下位置(px)
+     */
+    clietnBottom: number
 }
 
 type ResizeHandle = "t" | "b" | "l" | "r" | "tl" | "tr" | "br" | "bl"
@@ -182,6 +207,10 @@ class State {
      * offsetParentエレメント(座標の起点となるエレメント)
      */
     offsetParentElement!: HTMLElement
+    /**
+     * offsetParentエレメントがbodyかどうか(bodyの場合はleft, topは0になる)
+     */
+    offsetParentIsBody = false
     /**
      * ウィンドウをドラッグした際のクリック位置からウィンドウの左端までの幅
      */
@@ -292,22 +321,45 @@ export default defineComponent({
             const offsetX = window.pageXOffset
             const offsetY = window.pageYOffset
 
+            const width = rect.width
+            const height = rect.height
+            const left = rect.left + offsetX
+            const top = rect.top + offsetY
+
+            const clientWidth = element.clientWidth
+            const clientHeight = element.clientHeight
+            const clientLeft = left + element.clientLeft
+            const clientTop = top + element.clientTop
+
             return {
-                width: rect.width,
-                height: rect.height,
-                left: rect.left + offsetX,
-                top: rect.top + offsetY,
-                right: rect.right + offsetX,
-                bottom: rect.bottom + offsetY,
+                width,
+                height,
+                left,
+                top,
+                right: left + width,
+                bottom: top + height,
+                clientWidth,
+                clientHeight,
+                clientLeft,
+                clientTop,
+                clientRight: clientLeft + clientWidth,
+                clietnBottom: clientTop + clientHeight,
             }
         }
 
         const updateWindowRectStyle = (positionOnly?: boolean): void => {
-            const offsetParentRect = getAbsoluteRect(state.offsetParentElement)
+            let offsetLeft = 0
+            let offsetTop = 0
+
+            if (!state.offsetParentIsBody) {
+                const offsetParentRect = getAbsoluteRect(state.offsetParentElement)
+                offsetLeft = offsetParentRect.clientLeft
+                offsetTop = offsetParentRect.clientTop
+            }
 
             // 座標をセット
-            state.windowStyle.left = `${state.windowRect.left - offsetParentRect.left}px`
-            state.windowStyle.top = `${state.windowRect.top - offsetParentRect.top}px`
+            state.windowStyle.left = `${state.windowRect.left - offsetLeft}px`
+            state.windowStyle.top = `${state.windowRect.top - offsetTop}px`
 
             // 座標のみ更新する場合は終了
             if (positionOnly) return
@@ -318,56 +370,57 @@ export default defineComponent({
         }
 
         const updateWindowRect = (windowRect: WindowRect, centered?: boolean): void => {
+            // 境界の座標を取得
             const boundaryRect = getAbsoluteRect(state.boundaryElement)
 
             let {width, height, left, top} = windowRect
 
             // 幅が境界より大きい場合は境界の幅をセットする
-            if (width > boundaryRect.width) width = boundaryRect.width
+            if (width > boundaryRect.clientWidth) width = boundaryRect.clientWidth
 
             // 幅が最小幅より小さい場合は最小幅をセットする
             if (width < state.minWidth) width = state.minWidth
 
             // 高さが境界より大きい場合は境界の高さをセットする
-            if (height > boundaryRect.height) height = boundaryRect.height
+            if (height > boundaryRect.clientHeight) height = boundaryRect.clientHeight
 
             // 高さが最小幅より小さい場合は最小高さをセットする
             if (height < state.minHeight) height = state.minHeight
 
             if (centered) { // 中央揃え
-                if (width > boundaryRect.width) { // 幅が境界エリアの幅より大きい場合は0にセット
+                if (width > boundaryRect.clientWidth) { // 幅が境界エリアの幅より大きい場合は0にセット
                     left = 0
                 } else {
-                    left = (boundaryRect.width - width) / 2
+                    left = (boundaryRect.clientWidth - width) / 2
                 }
 
-                if (height > boundaryRect.height) { // 高さが境界エリアの高さより大きい場合は0にセット
+                if (height > boundaryRect.clientHeight) { // 高さが境界エリアの高さより大きい場合は0にセット
                     top = 0
                 } else {
-                    top = (boundaryRect.height - height) / 2
+                    top = (boundaryRect.clientHeight - height) / 2
                 }
             } else {
                 const right = left + width
                 const bottom = top + height
 
                 // 右位置が境界外の場合は､左位置をずらす
-                if (right > boundaryRect.right) {
-                    left -= (right - boundaryRect.right)
+                if (right > boundaryRect.clientRight) {
+                    left -= (right - boundaryRect.clientRight)
                 }
 
                 // 左位置が境界外の場合は､左位置を境界の開始位置にセット
-                if (left < boundaryRect.left) {
-                    left = boundaryRect.left
+                if (left < boundaryRect.clientLeft) {
+                    left = boundaryRect.clientLeft
                 }
 
                 // 下位置が境界外の場合は､上位置をずらす
-                if (bottom > boundaryRect.bottom) {
-                    top -= (bottom - boundaryRect.bottom)
+                if (bottom > boundaryRect.clietnBottom) {
+                    top -= (bottom - boundaryRect.clietnBottom)
                 }
 
                 // 上位置が境界外の場合は､上位置を境界の開始位置にセット
-                if (top < boundaryRect.top) {
-                    top = boundaryRect.top
+                if (top < boundaryRect.clientTop) {
+                    top = boundaryRect.clientTop
                 }
             }
 
@@ -386,10 +439,10 @@ export default defineComponent({
             const boundaryRect = getAbsoluteRect(state.boundaryElement)
 
             state.windowRect = {
-                width: boundaryRect.width,
-                height: boundaryRect.height,
-                left: boundaryRect.left,
-                top: boundaryRect.top,
+                width: boundaryRect.clientWidth,
+                height: boundaryRect.clientHeight,
+                left: boundaryRect.clientLeft,
+                top: boundaryRect.clientTop,
             }
 
             updateWindowRectStyle()
@@ -469,18 +522,18 @@ export default defineComponent({
 
             let top = mouseY - state.dragOffsetY
 
-            if (top < boundaryRect.top) top = boundaryRect.top
+            if (top < boundaryRect.clientTop) top = boundaryRect.clientTop
 
-            if (top + state.windowRect.height > boundaryRect.bottom) {
-                top = boundaryRect.bottom - state.windowRect.height
+            if (top + state.windowRect.height > boundaryRect.clietnBottom) {
+                top = boundaryRect.clietnBottom - state.windowRect.height
             }
 
             let left = mouseX - state.dragOffsetX
 
-            if (left < boundaryRect.left) left = boundaryRect.left
+            if (left < boundaryRect.clientLeft) left = boundaryRect.clientLeft
 
-            if (left + state.windowRect.width > boundaryRect.right) {
-                left = boundaryRect.right - state.windowRect.width
+            if (left + state.windowRect.width > boundaryRect.clientRight) {
+                left = boundaryRect.clientRight - state.windowRect.width
             }
 
             state.windowRect.top = top
@@ -517,10 +570,10 @@ export default defineComponent({
             let mouseX = event.pageX
             let mouseY = event.pageY
 
-            if (mouseX < boundaryRect.left) mouseX = boundaryRect.left
-            if (mouseX > boundaryRect.right) mouseX = boundaryRect.right
-            if (mouseY < boundaryRect.top) mouseY = boundaryRect.top
-            if (mouseY > boundaryRect.bottom) mouseY = boundaryRect.bottom
+            if (mouseX < boundaryRect.clientLeft) mouseX = boundaryRect.clientLeft
+            if (mouseX > boundaryRect.clientRight) mouseX = boundaryRect.clientRight
+            if (mouseY < boundaryRect.clientTop) mouseY = boundaryRect.clientTop
+            if (mouseY > boundaryRect.clietnBottom) mouseY = boundaryRect.clietnBottom
 
             let {width, height, left, top} = state.windowRect
 
@@ -660,6 +713,10 @@ export default defineComponent({
             }
 
             state.offsetParentElement = offsetParentElement as HTMLElement
+
+            if (offsetParentElement.tagName.toUpperCase() === "BODY") {
+                state.offsetParentIsBody = true
+            }
 
             // タイトルバーエレメントを取得
             const titleBarElement = titleBarRef.value

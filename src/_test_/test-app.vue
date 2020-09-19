@@ -1,7 +1,6 @@
 <template>
     <div id="app">
-        <window window-title="TESTAAAAAA" boundary-selector="#app"
-                init-width="80%" init-height="80%">
+        <window window-title="TESTAAAAAA" boundary-selector="#app">
             HELLO!
         </window>
     </div>
@@ -24,8 +23,13 @@ export default defineComponent({
 </script>
 
 <style lang="scss">
+body {
+    //box-sizing: border-box;
+}
 #app {
-    width: 100%;
-    height: 100%;
+    width:800px;
+    height: 600px;
+    border: solid 1px #444;
+    //position: relative;
 }
 </style>
