@@ -119,7 +119,6 @@ interface Rect {
      * 下位置(px)
      */
     bottom: number
-
     /**
      * ボーダーを除く幅(px)
      */
