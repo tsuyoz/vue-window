@@ -1,6 +1,6 @@
 {
   "name": "@tsuyoz/vue-window",
-  "version": "0.1.16",
+  "version": "0.1.19",
   "private": false,
   "main": "dist/vue-window.common.js",
   "unpkg": "dist/vue-window.umd.min.js",
